@@ -1,8 +1,10 @@
 'use strict';
 
+// npm中其介绍的功能为,记录函数的时间点 => 对metadata对象的属性一顿操作
 var retrieveLastRun = require('last-run');
 
 var metadata = require('./helpers/metadata');
+
 
 function lastRun(task, timeResolution) {
   if (timeResolution == null) {
