@@ -1,315 +1,195 @@
-<p align="center">
-  <a href="https://gulpjs.com">
-    <img height="257" width="114" src="https://raw.githubusercontent.com/gulpjs/artwork/master/gulp-2x.png">
-  </a>
-  <p align="center">The streaming build system</p>
-</p>
 
-[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url] [![Coveralls Status][coveralls-image]][coveralls-url] [![OpenCollective Backers][backer-badge]][backer-url] [![OpenCollective Sponsors][sponsor-badge]][sponsor-url] [![Gitter chat][gitter-image]][gitter-url]
+## 一
 
+### gulp入口文件介绍：
 
-## What is gulp?
+可以在本文件目录下寻找到index.js，接下来让我们看一下其中都有什么内容 =>
 
-- **Automation** - gulp is a toolkit that helps you automate painful or time-consuming tasks in your development workflow.
-- **Platform-agnostic** - Integrations are built into all major IDEs and people are using gulp with PHP, .NET, Node.js, Java, and other platforms.
-- **Strong Ecosystem** - Use npm modules to do anything you want + over 2000 curated plugins for streaming file transformations
-- **Simple** - By providing only a minimal API surface, gulp is easy to learn and simple to use
+```
+'use strict';
 
-## Installation
+var util = require('util'); 
+var Undertaker = require('undertaker');
 
-There are a few ways to install:
+var vfs = require('vinyl-fs');var watch = require('glob-watcher');
 
-* gulp v4.0.0 - `npm install gulp@next`
-* gulp v4.0.0-alpha.3 - `npm install gulpjs/gulp#v4.0.0-alpha.3`
-* gulp v3.9.1 - `npm install gulp`
+function Gulp() {
+  Undertaker.call(this);
 
-## Documentation
+  // Bind the functions for destructuring
+  this.watch = this.watch.bind(this);
+  this.task = this.task.bind(this);
+  this.series = this.series.bind(this);
+  this.parallel = this.parallel.bind(this);
+  this.registry = this.registry.bind(this);
+  this.tree = this.tree.bind(this);
+  this.lastRun = this.lastRun.bind(this);
+}
+util.inherits(Gulp, Undertaker);
 
-For a Getting started guide, API docs, recipes, making a plugin, etc. check out our docs!
-
-- Check out the [documentation for v4.0.0](/docs/README.md)! __Excuse our dust; these docs might be behind while we get everything updated. Please open an issue if something isn't working.__
-- Using the older v3.9.1? Check out the [documentation at the v3.9.1 tag](https://github.com/gulpjs/gulp/tree/v3.9.1/docs)!
-
-## Sample `gulpfile.js`
-
-This file will give you a taste of what gulp does.
-
-```js
-var gulp = require('gulp');
-var less = require('gulp-less');
-var babel = require('gulp-babel');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var cleanCSS = require('gulp-clean-css');
-var del = require('del');
-
-var paths = {
-  styles: {
-    src: 'src/styles/**/*.less',
-    dest: 'assets/styles/'
-  },
-  scripts: {
-    src: 'src/scripts/**/*.js',
-    dest: 'assets/scripts/'
-  }
+Gulp.prototype.src = vfs.src;
+Gulp.prototype.dest = vfs.dest;
+Gulp.prototype.symlink = vfs.symlink;
+Gulp.prototype.watch = function(glob, opt, task) {
 };
 
-/* Not all tasks need to use streams, a gulpfile is just another node program
- * and you can use all packages available on npm, but it must return either a
- * Promise, a Stream or take a callback and call it
- */
-function clean() {
-  // You can use multiple globbing patterns as you would with `gulp.src`,
-  // for example if you are using del 2.0 or above, return its promise
-  return del([ 'assets' ]);
-}
+// Let people use this class from our instance
+Gulp.prototype.Gulp = Gulp;
 
-/*
- * Define our tasks using plain functions
- */
-function styles() {
-  return gulp.src(paths.styles.src)
-    .pipe(less())
-    .pipe(cleanCSS())
-    // pass in options to the stream
-    .pipe(rename({
-      basename: 'main',
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest(paths.styles.dest));
-}
+var inst = new Gulp();
+module.exports = inst;
 
-function scripts() {
-  return gulp.src(paths.scripts.src, { sourcemaps: true })
-    .pipe(babel())
-    .pipe(uglify())
-    .pipe(concat('main.min.js'))
-    .pipe(gulp.dest(paths.scripts.dest));
-}
-
-function watch() {
-  gulp.watch(paths.scripts.src, scripts);
-  gulp.watch(paths.styles.src, styles);
-}
-
-/*
- * You can use CommonJS `exports` module notation to declare tasks
- */
-exports.clean = clean;
-exports.styles = styles;
-exports.scripts = scripts;
-exports.watch = watch;
-
-/*
- * Specify if tasks run in series or parallel using `gulp.series` and `gulp.parallel`
- */
-var build = gulp.series(clean, gulp.parallel(styles, scripts));
-
-/*
- * You can still use `gulp.task` to expose tasks
- */
-gulp.task('build', build);
-
-/*
- * Define default task that can be called by just running `gulp` from cli
- */
-gulp.task('default', build);
 ```
 
-## Use latest JavaScript version in your gulpfile
 
-Node already supports a lot of **ES2015**, to avoid compatibility problem we suggest to install Babel and rename your `gulpfile.js` as `gulpfile.babel.js`.
+## 二
 
-```sh
-npm install --save-dev babel-register babel-preset-es2015
+让我们由上到下的看一遍：
+
+
+其中，声明了所需要加载的依赖包
+
+```
+// Node内部util模块，是Node中一个核心的工具函数模块
+var util = require('util'); 
+
+// 执行任务管理有关的逻辑,---> gulp.task()
+
+var Undertaker = require('undertaker');
+
+// vinyl-fs模块: src/dest/symlink
+var vfs = require('vinyl-fs');
+
+// npm中介绍为 ： 观察全局并在更改时执行功能，具有用于去抖动和排队的智能默认值。
+var watch = require('glob-watcher');
 ```
 
-Then create a **.babelrc** file with the preset configuration.
+## 三
 
-```js
-{
-  "presets": [ "es2015" ]
+我们接下去看一下**Gulp**这个方法中实现了什么功能
+
+```
+function Gulp() {
+  // 转this,将Undertaker的方法绑定到this中
+  Undertaker.call(this);
+
+  // 绑定函数为解构
+  this.watch = this.watch.bind(this);
+  this.task = this.task.bind(this);
+  this.series = this.series.bind(this);
+  this.parallel = this.parallel.bind(this);
+  this.registry = this.registry.bind(this);
+  this.tree = this.tree.bind(this);
+  this.lastRun = this.lastRun.bind(this);
 }
 ```
 
-And here's the same sample from above written in **ES2015**.
+我们可以在此看到我们所用到的gulp.task\gulp.series等方法都是来源于<font color="ff0000">**undertaker**</font>这个模块
 
-```js
-import gulp from 'gulp';
-import less from 'gulp-less';
-import babel from 'gulp-babel';
-import concat from 'gulp-concat';
-import uglify from 'gulp-uglify';
-import rename from 'gulp-rename';
-import cleanCSS from 'gulp-clean-css';
-import del from 'del';
+## 四
 
-const paths = {
-  styles: {
-    src: 'src/styles/**/*.less',
-    dest: 'assets/styles/'
-  },
-  scripts: {
-    src: 'src/scripts/**/*.js',
-    dest: 'assets/scripts/'
-  }
+```
+// 继承,(构造函数,父类构造函数)
+util.inherits(Gulp, Undertaker);
+
+```
+
+util是Node中的核心工具函数模块，其中的inherits是实现继承的一种方法
+
+[Node-Api-util.inherits](http://nodejs.cn/api/util.html#util_util_inherits_constructor_superconstructor)
+
+其中传入的参数为(子类构造函数, 父类构造函数)
+
+## 五
+
+```
+Gulp.prototype.src = vfs.src;
+Gulp.prototype.dest = vfs.dest;
+Gulp.prototype.symlink = vfs.symlink;
+Gulp.prototype.watch = function(glob, opt, task) {
+  // 省略些许代码---后续涉及此部分将再提及
 };
 
-/*
- * For small tasks you can export arrow functions
- */
-export const clean = () => del([ 'assets' ]);
-
-/*
- * You can also declare named functions and export them as tasks
- */
-export function styles() {
-  return gulp.src(paths.styles.src)
-    .pipe(less())
-    .pipe(cleanCSS())
-    // pass in options to the stream
-    .pipe(rename({
-      basename: 'main',
-      suffix: '.min'
-    }))
-    .pipe(gulp.dest(paths.styles.dest));
-}
-
-export function scripts() {
-  return gulp.src(paths.scripts.src, { sourcemaps: true })
-    .pipe(babel())
-    .pipe(uglify())
-    .pipe(concat('main.min.js'))
-    .pipe(gulp.dest(paths.scripts.dest));
-}
-
- /*
-  * You could even use `export as` to rename exported tasks
-  */
-function watchFiles() {
-  gulp.watch(paths.scripts.src, scripts);
-  gulp.watch(paths.styles.src, styles);
-}
-export { watchFiles as watch };
-
-/*
- * You can still use `gulp.task`
- * for example to set task names that would otherwise be invalid
- */
-const clean = gulp.series(clean, gulp.parallel(styles, scripts));
-gulp.task('clean', clean);
-
-/*
- * Export a default task
- */
-export default build;
+// Let people use this class from our instance
+Gulp.prototype.Gulp = Gulp;
 ```
 
-## Incremental Builds
+第五部分的代码既是将在Gulp的原型peototype上增加部分方法，且来源于<font color="ff0000">**vinyl-fs**</font>这个模块
 
-You can filter out unchanged files between runs of a task using
-the `gulp.src` function's `since` option and `gulp.lastRun`:
-```js
-const paths = {
-  ...
-  images: {
-    src: 'src/images/**/*.{jpg,jpeg,png}',
-    dest: 'build/img/'
-  }
-}
 
-function images() {
-  return gulp.src(paths.images.src, {since: gulp.lastRun(images)})
-    .pipe(imagemin({optimizationLevel: 5}))
-    .pipe(gulp.dest(paths.images.dest));
-}
+## 六
 
-function watch() {
-  gulp.watch(paths.images.src, images);
-}
 ```
-Task run times are saved in memory and are lost when gulp exits. It will only
-save time during the `watch` task when running the `images` task
-for a second time.
-
-If you want to compare modification time between files instead, we recommend these plugins:
-- [gulp-changed];
-- or [gulp-newer] - supports many:1 source:dest.
-
-[gulp-newer] example:
-```js
-function images() {
-  var dest = 'build/img';
-  return gulp.src(paths.images)
-    .pipe(newer(dest))  // pass through newer images only
-    .pipe(imagemin({optimizationLevel: 5}))
-    .pipe(gulp.dest(dest));
-}
+var inst = new Gulp();
+module.exports = inst;
 ```
+最后一块即是new一个Gulp的实例，并将其暴露出来供调用使用
 
-If you can't simply filter out unchanged files, but need them in a later phase
-of the stream, we recommend these plugins:
-- [gulp-cached] - in-memory file cache, not for operation on sets of files
-- [gulp-remember] - pairs nicely with gulp-cached
 
-[gulp-remember] example:
-```js
-function scripts() {
-  return gulp.src(scriptsGlob)
-    .pipe(cache('scripts'))    // only pass through changed files
-    .pipe(header('(function () {')) // do special things to the changed files...
-    .pipe(footer('})();'))     // for example,
-                               // add a simple module wrap to each file
-    .pipe(remember('scripts')) // add back all files to the stream
-    .pipe(concat('app.js'))    // do things that require all files
-    .pipe(gulp.dest('public/'))
-}
+## 七
+
+由此
+
+我们可以知道我们需要了解gulp的内部执行机制以及流程，我们需要关注于
+
+```
+undertaker、
+vinyl-fs、
+glob-watcher
+```
+这三模块分别都将实现什么功能。
+
+---
+
+#### 题外->
+
+##### util.inherits实现了什么？
+
+```
+var util = require('util'); 
+function Base() { 
+    this.name = 'base'; 
+    this.base = 1991; 
+    this.sayHello = function() { 
+    console.log('Hello ' + this.name); 
+    }; 
+} 
+Base.prototype.showName = function() { 
+    console.log(this.name);
+}; 
+function Sub() { 
+    this.name = 'sub'; 
+} 
+util.inherits(Sub, Base); 
+var objBase = new Base(); 
+objBase.showName();  // base
+objBase.sayHello(); // Hello base
+console.log(objBase);  // Base()
+var objSub = new Sub(); 
+objSub.showName();  // sub
+// objSub.sayHello();  // is not a function
+console.log(objSub);
 ```
 
-## Want to contribute?
+在网上寻找的测试，inherits是通过将父类构造函数的原型链复制到子类的原型链上，进而实现的继承，因此我们也只能继承到相应原型链上的方法
 
-Anyone can help make this project better - check out our [Contributing guide](/CONTRIBUTING.md)!
+```
+exports.inherits = function(ctor, superCtor) {
+  // 一些参数的合法性判断，略……
 
-## Backers
+  ctor.super_ = superCtor;
+  ctor.prototype = Object.create(superCtor.prototype, {
+    constructor: {
+      value: ctor,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+};
 
-Support us with a monthly donation and help us continue our activities.
+同时继承的子类也可以通过super_访问到父类的构造函数
 
-[![Backers][backers-image]][support-url]
+console.log(Sub.super_ === Base) // true
 
-## Sponsors
-
-Become a sponsor to get your logo on our README on Github.
-
-[![Sponsors][sponsors-image]][support-url]
-
-[downloads-image]: https://img.shields.io/npm/dm/gulp.svg
-[npm-url]: https://www.npmjs.com/package/gulp
-[npm-image]: https://img.shields.io/npm/v/gulp.svg
-
-[travis-url]: https://travis-ci.org/gulpjs/gulp
-[travis-image]: https://img.shields.io/travis/gulpjs/gulp.svg?label=travis-ci
-
-[appveyor-url]: https://ci.appveyor.com/project/gulpjs/gulp
-[appveyor-image]: https://img.shields.io/appveyor/ci/gulpjs/gulp.svg?label=appveyor
-
-[coveralls-url]: https://coveralls.io/r/gulpjs/gulp
-[coveralls-image]: https://img.shields.io/coveralls/gulpjs/gulp/master.svg
-
-[gitter-url]: https://gitter.im/gulpjs/gulp
-[gitter-image]: https://badges.gitter.im/gulpjs/gulp.svg
-
-[backer-url]: #backers
-[backer-badge]: https://opencollective.com/gulpjs/backers/badge.svg?color=blue
-[sponsor-url]: #sponsors
-[sponsor-badge]: https://opencollective.com/gulpjs/sponsors/badge.svg?color=blue
-
-[support-url]: https://opencollective.com/gulpjs#support
-
-[backers-image]: https://opencollective.com/gulpjs/backers.svg
-[sponsors-image]: https://opencollective.com/gulpjs/sponsors.svg
-
-[gulp-cached]: https://github.com/contra/gulp-cached
-[gulp-remember]: https://github.com/ahaurw01/gulp-remember
-[gulp-changed]: https://github.com/sindresorhus/gulp-changed
-[gulp-newer]: https://github.com/tschaub/gulp-newer
+```
