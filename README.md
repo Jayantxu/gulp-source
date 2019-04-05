@@ -20,7 +20,7 @@
 
 源码相关：
 
-- gulp主入口分析---[gulp-index.js]()
+- gulp主入口分析---[gulp-index.js](https://github.com/Jayantxu/gulp-source/tree/master/gulp)
 
 - glob-watcher模块分析---[glob-watcher-index.js]()
 
