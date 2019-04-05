@@ -1,7 +1,13 @@
 
-## 一
+## gulp基本使用
 
-### gulp入口文件介绍：
+[gulp-api介绍](https://www.gulpjs.com.cn/docs/api/)
+
+
+
+## 入口文件分析
+
+## 一
 
 可以在本文件目录下寻找到index.js，接下来让我们看一下其中都有什么内容 =>
 
