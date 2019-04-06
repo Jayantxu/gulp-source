@@ -25,9 +25,11 @@ function Gulp() {
 // 继承,(构造函数,父类构造函数)
 util.inherits(Gulp, Undertaker);
 
+// 以下则是vinyl-fs模块所导出的
 Gulp.prototype.src = vfs.src;
 Gulp.prototype.dest = vfs.dest;
 Gulp.prototype.symlink = vfs.symlink;
+
 Gulp.prototype.watch = function(glob, opt, task) {
   if (typeof opt === 'string' || typeof task === 'string' ||
     Array.isArray(opt) || Array.isArray(task)) {

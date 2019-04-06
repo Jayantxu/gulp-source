@@ -12,12 +12,14 @@ function parallel() {
 
   // 根据“任务”数组从寄存器中获取展开的任务数组
   var args = normalizeArgs(this._registry, arguments);
-  // 为对象扩展新“”对象
+  // 为extensions变量扩展新“”对象
   var extensions = createExtensions(this);
   // 将参数与扩展的对象(after,before,create,error)做关联
   // 所以我们来看一下它具体实现了些什么 => 
   
-  // bach.settleParallel(args, extensions) : bach.parallel(args, extensions)
+  // bach.settleParallel+
+  
+  (args, extensions) : bach.parallel(args, extensions)
   var fn = create(args, extensions);
 
   fn.displayName = '<parallel>';
