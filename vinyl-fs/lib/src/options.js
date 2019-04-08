@@ -1,5 +1,6 @@
 'use strict';
 
+// 各种配置选项
 var config = {
   buffer: {
     type: 'boolean',

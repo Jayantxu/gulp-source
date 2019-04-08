@@ -12,33 +12,32 @@ var fo = require('../../file-operations');
 function writeContents(optResolver) {
 
   function writeFile(file, enc, callback) {
-    // Write it as a symlink
+    // Write it as a symlink，是否为symlink类型？
     if (file.isSymbolic()) {
       return writeSymbolicLink(file, optResolver, onWritten);
     }
+    // 以下根据不同的相应信息，进行不同的写入操作
 
     // If directory then mkdirp it
     if (file.isDirectory()) {
       return writeDir(file, optResolver, onWritten);
     }
-
     // Stream it to disk yo
     if (file.isStream()) {
       return writeStream(file, optResolver, onWritten);
     }
-
     // Write it like normal
     if (file.isBuffer()) {
       return writeBuffer(file, optResolver, onWritten);
     }
-
+    // 判断文件是否无内容
     // If no contents then do nothing
     if (file.isNull()) {
       return onWritten();
     }
-
     // This is invoked by the various writeXxx modules when they've finished
     // writing the contents.
+    // 出错则如此处理
     function onWritten(writeErr) {
       var flags = fo.getFlags({
         overwrite: optResolver.resolve('overwrite', file),

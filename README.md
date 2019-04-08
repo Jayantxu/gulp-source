@@ -22,11 +22,11 @@
 
 - gulp主入口分析---[gulp-index.js](https://github.com/Jayantxu/gulp-source/tree/master/gulp)
 
-- glob-watcher模块分析---[glob-watcher-index.js]()
+- glob-watcher模块分析---[glob-watcher-index.js](https://github.com/Jayantxu/gulp-source/tree/master/glob-watcher)
 
 - undertaker模块分析---[undertaker-index.js](https://github.com/Jayantxu/gulp-source/tree/master/undertaker)
 
-- vinyl-fs模块分析---[vinyl-fs-index.js]()
+- vinyl-fs模块分析---[vinyl-fs-index.js](https://github.com/Jayantxu/gulp-source/tree/master/vinyl-fs)
 
 ## 说明
 

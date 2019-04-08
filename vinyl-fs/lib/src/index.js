@@ -31,15 +31,17 @@ function src(glob, opt) {
     // 使用了glob-stream模块，传入一个(简化的正则表达式)做为第一个参数，opt对象作为第二个参数，
     // 返回创建glob流
     gs(glob, opt),
-    // 传入上述的解析配置，
+    // 传入上述的解析配置，创建一个vinly文件对象
     wrapVinyl(optResolver),
-    // 
+    // glob的stat为symlink的情况下，转为硬链接
     resolveSymlinks(optResolver),
     // 进行文件stat以及与optResolver配置选项上进行时间的比较
     prepare(optResolver),
-    // 对流进行操作，buffer，stream，
+    // 对流进行操作，获取文件内容，写入file.content属性
+    // 预设为Buffer是通过readBuffer获取
+    // 否则则通过readStream获取
     readContents(optResolver),
-    // 对文件的映射？
+    // 对文件的映射，是否开启 sourcemap
     sourcemap(optResolver),
     /*
     一步步的加工成streams
