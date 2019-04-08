@@ -6,6 +6,7 @@ var fo = require('../file-operations');
 function resolveSymlinks(optResolver) {
 
   // A stat property is exposed on file objects as a (wanted) side effect
+  // 将文件状态转为想要stat
   function resolveFile(file, enc, callback) {
 
     fo.reflectLinkStat(file.path, file, onReflect);

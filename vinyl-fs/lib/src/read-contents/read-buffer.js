@@ -1,5 +1,6 @@
 'use strict';
 
+// 对文件系统的fs模块上进行了改进
 var fs = require('graceful-fs');
 var removeBomBuffer = require('remove-bom-buffer');
 

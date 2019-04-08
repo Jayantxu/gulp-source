@@ -12,6 +12,7 @@ function sourcemapStream(optResolver) {
       return callback(null, file);
     }
 
+    // 解析内联源映射,根据onAdd的方法，updatedFile将具有sourceMap的属性
     sourcemap.add(file, onAdd);
 
     function onAdd(sourcemapErr, updatedFile) {
